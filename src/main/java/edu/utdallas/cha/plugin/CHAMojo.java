@@ -48,3 +48,24 @@ public class CHAMojo extends AbstractMojo {
         return classPath;
     }
 }
+
+/*
+
+
+#defines(c, m) :- declares(c, m). # here, we don't care about visibility
+#defines(c, m) :- extends(s, c), defines(s, m), nonprivate(m). # here, we only inherit those methods that are not private
+# note that although a class cannot override a final method, the methods are inherited
+# we also don't care whether or not the method is concrete
+
+#may_call(cls, sig, cls, sig)
+#direct_call(cls, sig, cls, sig)
+
+
+subtype(sub, sup) :- extends(sub, sup).
+subtype(sub, sup) :- subtype(sub, c), extends(c, sup).
+
+may_call(c, m, d, n) :- direct_call(c, m, d, n), concrete(d, n).
+may_call(c, m, d, n) :- direct_call(c, m, s, n), subtype(d, s), declares(d, n). # a subtype that declares the same signature, declares a concrete one
+may_call(c, m, d, n) :- may_call(c, m, e, k), may_call(e, k, d, n).
+
+ */
