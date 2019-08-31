@@ -29,22 +29,18 @@ public class DirectCallRel extends Relation<IntQuad> {
                     String calleeSig) {
         final Integer callerOwnerClassIndex = this.classes.indexOf(callerOwnerClassName);
         if (callerOwnerClassIndex == null) {
-            System.err.println("warning: class " + callerOwnerClassName + " not found.");
             return;
         }
         final Integer callerSigIndex = this.signatures.indexOf(callerSig);
         if (callerSigIndex == null) {
-            System.err.println("warning: signature " + callerSig + " not found.");
             return;
         }
         final Integer calleeOwnerClassIndex = this.classes.indexOf(calleeOwnerClass);
         if (calleeOwnerClassIndex == null) {
-            System.err.println("warning: class " + calleeOwnerClass + " not found.");
             return;
         }
         final Integer calleeSigIndex = this.signatures.indexOf(calleeSig);
         if (calleeSigIndex == null) {
-            System.err.println("warning: signature " + calleeSig + " not found.");
             return;
         }
         this.data.add(IntQuad.of(callerOwnerClassIndex, callerSigIndex, calleeOwnerClassIndex, calleeSigIndex));

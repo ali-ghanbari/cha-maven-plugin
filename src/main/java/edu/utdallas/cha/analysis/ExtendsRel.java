@@ -24,12 +24,10 @@ public class ExtendsRel extends Relation<IntPair> {
     public void add(final String subtype, final String supertype) {
         final Integer subIndex = this.classes.indexOf(subtype);
         if (subIndex == null) {
-            System.err.println("warning: class " + subtype + " not found.");
             return;
         }
         final Integer supIndex = this.classes.indexOf(supertype);
         if (supIndex == null) {
-            System.err.println("warning: class " + supertype + " not found.");
             return;
         }
         this.data.add(IntPair.of(subIndex, supIndex));

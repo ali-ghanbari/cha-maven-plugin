@@ -66,6 +66,19 @@ public class Analysis {
         extendsRel.save();
         directCallRel.save();
         declaresRel.save();
+
+        runBDDBDDB("cha.dlog");
+    }
+
+    private static void runBDDBDDB(final String dlogFileName) throws Exception {
+        final String[] cmd = {
+                "java",
+                "-jar",
+                "bddbddb-full.jar",
+                dlogFileName
+        };
+        final ProcessBuilder pb = new ProcessBuilder(cmd).inheritIO();
+        pb.start().waitFor();
     }
 }
 

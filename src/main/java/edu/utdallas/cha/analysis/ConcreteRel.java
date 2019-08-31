@@ -26,12 +26,10 @@ public class ConcreteRel extends Relation<IntPair> {
     public void add(final String className, final String methodSignature) {
         final Integer classIndex = this.classes.indexOf(className);
         if (classIndex == null) {
-            System.err.println("warning: class " + className + " not found.");
             return;
         }
         final Integer sigIndex = this.signatures.indexOf(methodSignature);
         if (sigIndex == null) {
-            System.err.println("warning: signature " + methodSignature + " not found.");
             return;
         }
         this.data.add(IntPair.of(classIndex, sigIndex));

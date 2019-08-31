@@ -154,9 +154,11 @@ class MyMethodVisitor extends MethodVisitor {
                                 String name,
                                 String descriptor,
                                 boolean isInterface) {
-        this.classVisitorDriver.addToWorkList(owner);
-        this.nv.visitMethodCall(this.currentOwnerClassName,
-                this.currentMethodName, this.currentMethodDesc, owner, name, descriptor);
+        if (!owner.startsWith("[")) {
+            this.classVisitorDriver.addToWorkList(owner);
+            this.nv.visitMethodCall(this.currentOwnerClassName,
+                    this.currentMethodName, this.currentMethodDesc, owner, name, descriptor);
+        }
         super.visitMethodInsn(opcode, owner, name, descriptor, isInterface);
     }
 

@@ -1,0 +1,17 @@
+.include "C.dom"
+.include "S.dom"
+
+extends(sub:C, sup:C) inputtuples
+concrete(c:C, s:S) inputtuples
+declares(c:C, s:S) inputtuples
+direct_call(c:C, s:S, d:C, t:S) inputtuples
+subtype(c:C, d:C)
+may_call(c:C, s:S, d:C, t:S) outputtuples
+
+subtype(sub, sup) :- extends(sub, sup).
+subtype(sub, sup) :- subtype(sub, c), subtype(c, sup).
+
+may_call(c, m, d, n) :- direct_call(c, m, d, n), concrete(d, n).
+## a subtype that declares the same signature, declares a concrete one
+may_call(c, m, d, n) :- direct_call(c, m, s, n), subtype(d, s), declares(d, n).
+## may_call(c, m, d, n) :- may_call(c, m, e, k), may_call(e, k, d, n). may_call should not be transitive

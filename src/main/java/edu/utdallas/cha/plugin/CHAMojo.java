@@ -1,6 +1,7 @@
 package edu.utdallas.cha.plugin;
 
 import edu.utdallas.cha.analysis.Analysis;
+import org.apache.commons.io.IOUtils;
 import org.apache.maven.artifact.DependencyResolutionRequiredException;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoFailureException;
@@ -16,11 +17,19 @@ import org.pitest.classpath.ClassloaderByteArraySource;
 import org.pitest.functional.Option;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
 @Mojo(name = "print-cha", requiresDependencyResolution = ResolutionScope.TEST)
 public class CHAMojo extends AbstractMojo {
+    private static final String FILE_NAMES[] = {
+            "bddbddb-full.jar",
+            "cha.dlog"
+    };
+
     @Parameter(property = "project", readonly = true, required = true)
     protected MavenProject project;
 
@@ -35,13 +44,31 @@ public class CHAMojo extends AbstractMojo {
         this.classByteArraySource = createCachedClassByteArraySource();
         this.buildOutputDirectory = new File(this.project.getBuild().getOutputDirectory());
 
+        setupDatalog();
+
         final Analysis cha = new Analysis(this.classByteArraySource, this.buildOutputDirectory);
         try {
             cha.start();
         } catch (Exception e) {
             throw new MojoFailureException(e.getMessage(), e);
+        } finally {
+            for (final String fileName : FILE_NAMES) {
+                (new File(fileName)).delete();
+            }
         }
 
+    }
+
+    private void setupDatalog() {
+        final ClassLoader classloader = Thread.currentThread().getContextClassLoader();
+        for (final String fileName : FILE_NAMES) {
+            try (final InputStream is = classloader.getResourceAsStream(fileName);
+                 final OutputStream os = new FileOutputStream(fileName)) {
+                IOUtils.copy(is, os);
+            } catch (Exception e) {
+                getLog().warn(e);
+            }
+        }
     }
 
     private ClassPath getClassPath() {
@@ -94,11 +121,6 @@ public class CHAMojo extends AbstractMojo {
 #direct_call(cls, sig, cls, sig)
 
 
-subtype(sub, sup) :- extends(sub, sup).
-subtype(sub, sup) :- subtype(sub, c), extends(c, sup).
 
-may_call(c, m, d, n) :- direct_call(c, m, d, n), concrete(d, n).
-may_call(c, m, d, n) :- direct_call(c, m, s, n), subtype(d, s), declares(d, n). # a subtype that declares the same signature, declares a concrete one
-may_call(c, m, d, n) :- may_call(c, m, e, k), may_call(e, k, d, n).
 
  */

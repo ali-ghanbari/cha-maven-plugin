@@ -3,5 +3,7 @@
 target/
 *.iml
 *.tuples
+*.dom
+rbddinfo
 *~
 *#
